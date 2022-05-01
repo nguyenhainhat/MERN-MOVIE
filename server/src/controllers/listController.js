@@ -1,4 +1,27 @@
-const List = require("../models/List");
+const { List, Genre } = require("../models/List");
+
+const genreController = {
+  createGenre: async (req, res) => {
+    try {
+      const newGenre = await new Genre({
+        name: req.body.name,
+      });
+      const genre = await newGenre.save();
+      
+      res.status(200).json(genre);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  getAllGenre: async (req, res) => {
+    try {
+      const genre = await Genre.find();
+      res.status(200).json(genre);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+};
 
 const listController = {
   createList: async (req, res) => {
@@ -24,30 +47,38 @@ const listController = {
     let list = [];
     const typeQuery = req.query.type;
     const genreQuery = req.query.genre;
-    const find = await List.find({ genre_ids: { $eq: Number(genreQuery) } });
-    let storeReduce = [];
-    find.filter((item) => storeReduce.push(item));
+    const find = genreQuery ? await List.find({
+      "genre_ids": {_id: genreQuery} 
+    }): []
+
     try {
       if (typeQuery) {
         if (genreQuery) {
-          storeReduce.reduce(async (a, item) => {
-            return (list = await List.aggregate([
+          find.reduce(async (a, item) => {
+            return await List.aggregate([
               { $sample: { size: 10 } },
-              { $match: { type: typeQuery, genre_ids: item.genre_ids } },
-            ]));
+              { $match: { type: typeQuery, genre_ids: item._id } },
+            ]);
           });
-          return res.status(200).json(storeReduce);
+          return res.status(200).json(find);
         } else {
-          list = await List.aggregate([
-            { $match: { type: typeQuery } },
-          ]);
+          list = await List.aggregate([{ $match: { type: typeQuery } }]);
           return res.status(200).json(list);
         }
       }
-     else {
-       const getAllList = await List.find()
-       return res.status(200).json(getAllList);
-     }
+       else {
+        const getAllList = await List.find();
+        return res.status(200).json(getAllList);
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(403).json(error);
+    }
+  },
+  getList: async (req, res) => {
+    try {
+      const list = await List.findById(req.params.id).populate("genre_ids");
+      res.status(200).json(list);
     } catch (error) {
       console.log(error);
       res.status(403).json(error);
@@ -76,4 +107,8 @@ const listController = {
   },
 };
 
-module.exports = listController;
+// update info TV
+
+
+
+module.exports = { listController, genreController };

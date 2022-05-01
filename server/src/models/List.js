@@ -1,6 +1,16 @@
 const mongoose = require("mongoose");
 
-const ListSchema = new mongoose.Schema(
+const genreSchema = new mongoose.Schema({
+  
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+});
+
+
+const listSchema = new mongoose.Schema(
   {
     idMovie: {
       type: Number,
@@ -24,10 +34,19 @@ const ListSchema = new mongoose.Schema(
     release_date: {
       type: Date,
     },
-    genre_ids: { type: Array },
+    genre_ids: [
+
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Genre",
+      },
+    ],
     vote_average: { type: Number },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("List", ListSchema);
+let Genre = mongoose.model("Genre", genreSchema);
+let List = mongoose.model("List", listSchema);
+
+module.exports = { List, Genre };
