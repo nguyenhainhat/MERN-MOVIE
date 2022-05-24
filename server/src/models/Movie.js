@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {Genre} = require("../models/List")
 
 const MovieSchema = new mongoose.Schema(
   {
@@ -24,9 +25,20 @@ const MovieSchema = new mongoose.Schema(
     release_date: {
       type: Date,
     },
-    genre_ids: { type: Array },
+    genre_ids: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Genre",
+      },
+    ],
     vote_average: { type: Number },
-
+    status: { type: String, required: true },
+    cast: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cast",
+      },
+    ]
   },
   { timestamps: true }
 );

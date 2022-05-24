@@ -5,9 +5,9 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const authRoute = require("./src/routes/authRoute");
 const userRoute = require("./src/routes/userRoute");
+const tvRoute = require("./src/routes/tvRoute");
+const movieRoute = require("./src/routes/movieRoute");
 const listRoute = require("./src/routes/listRoute");
-
-
 
 const app = express();
 dotenv.config();
@@ -18,6 +18,8 @@ app.use(express.json());
 // Route
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
+app.use("/tv", tvRoute);
+app.use("/movie", movieRoute);
 app.use("/list", listRoute);
 
 
