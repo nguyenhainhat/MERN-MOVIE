@@ -1,28 +1,28 @@
-const User = require("../models/User");
+// const User = require("../models/User");
+const { User, UserCommentMovie } = require("../models/User");
+
 const bcryt = require("bcrypt");
 // const CryptoJS = require("crypto-js");
 const userController = {
   updateUser: async (req, res) => {
-    if (req.user?.id === req.params.id || req.user?.admin) {
-      if (req.body.password) {
-        const salt = await bcryt.genSalt(10);
-        const hashed = await bcryt.hash(req.body.password, salt);
+    if (req.body.password) {
+      const salt = await bcryt.genSalt(10);
+      const hashed = await bcryt.hash(req.body.password, salt);
 
-        req.body.password = hashed;
-      }
-      try {
-        const updateUser = await User.findByIdAndUpdate(
-          req.params.id,
-          {
-            $set: req.body,
-          },
-          { new: true }
-        );
-        res.status(200).json(updateUser);
-      } catch (error) {
-        res.status(500).json(error);
-      }
-    } else return res.status(401).json("You can update only your account!");
+      req.body.password = hashed;
+    }
+    try {
+      const updateUser = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+      res.status(200).json(updateUser);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   },
 
   getUser: async (req, res) => {
@@ -75,25 +75,54 @@ const userController = {
     }
   },
 
-  comment: async (req, res) => {
+  CreateCommentsMovie: async (req, res) => {
     try {
-      if (req.user?.id === req.params.id) {
-        const updateUser = await User.findByIdAndUpdate(
-          req.params.id,
-          {
-            $set: { comment: req.body.comment },
-          },
-          { new: true }
+      const newComment = await new UserCommentMovie({
+        movie: req.body.movie,
+        tv: req.body.tv,
+        user: req.body.user,
+        comment: req.body.comment,
+      });
+      const comment = await newComment.save();
+      if (req.body.user) {
+        // const tv = await Tv.findById(req.body.tv);
+        await User.updateOne(
+          { _id: req.body.user },
+          { $push: { comment: comment._id } }
         );
-
-        res.status(401).json(updateUser);
-      } else return res.status(401).json("You can update only your account!");
+      }
+      res.status(200).json(comment);
     } catch (error) {
+      res.status(403).json(error);
+    }
+  },
+
+  GetAcomment: async (req, res) => {
+    try {
+      const getCommentUser = await UserCommentMovie.find(req.params.id).populate(
+        "movie user tv"
+      );
+      res.status(200).json(getCommentUser);
+    } catch (error) {
+      console.log(error)
       res.status(500).json(error);
     }
   },
 
-  
+  DeleteComment: async (req, res) => {
+    try {
+      await User.updateMany(
+        { comment: req.params.id },
+        { $pull: { comment: req.params.id } }
+      );
+      const DeleteComment = await UserCommentMovie.findByIdAndDelete(req.params.id)
+      res.status(200).json(DeleteComment);
+    } catch (error) {
+      console.log(error)
+      res.status(500).json(error);
+    }
+  }
+
 };
 
 module.exports = userController;

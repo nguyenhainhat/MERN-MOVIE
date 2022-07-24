@@ -1,0 +1,30 @@
+@import "../../../scss/index";
+
+.update {
+    &_season {
+        width: 100%;
+        &_item {
+            @include flex(baseline, start);
+            gap: 2rem;
+            margin-bottom: 1rem;
+            label {
+                width: 10%;
+            }
+            input {
+                width: 60%;
+            }
+        }
+        &_episode {
+            width: 100%;
+            @include flex(baseline, start);
+            gap: 2rem;
+            margin-bottom: 1rem;
+            label {
+                width: 30%;
+            }
+            input {
+                width: 60%;
+            }
+        }
+    }
+}

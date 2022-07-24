@@ -1,0 +1,28 @@
+@import "../../scss/index" ;
+
+.list {
+    width: 100%;
+    &_genre-form_input {
+        margin-block: 1rem;
+    }
+    .container {
+        justify-content: start;
+        gap: 4rem;
+    }
+    &_cast {
+        &_create {
+            @include flex(baseline, center, column);
+            margin-bottom: 2rem;
+        }
+        &_update {
+            &_item {
+                margin-bottom: 1rem;
+            }
+        }
+    }
+}
+.cast_item {
+    @include flex(baseline, start);
+    gap: 10px;
+    margin-bottom: 1rem;
+}

@@ -38,7 +38,14 @@ const MovieSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Cast",
       },
-    ]
+    ],
+    trailer: {
+      type: String
+    },
+    video: {
+      type: String
+    }
+
   },
   { timestamps: true }
 );

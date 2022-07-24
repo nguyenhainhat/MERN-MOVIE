@@ -1,0 +1,17 @@
+@import "../../../scss/index";
+
+.category {
+  width: 100%;
+  &_container {
+    width: 100%;
+    .topType_item {
+      width: auto;
+    }
+  }
+  &_search {
+    .btn {
+      padding: 0.2rem 1rem;
+      font-size: 1.2rem;
+    }
+  }
+}

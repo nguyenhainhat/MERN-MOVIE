@@ -1,0 +1,22 @@
+@import "../../../scss/index";
+
+.season {
+    width: 100%;
+    &_item {
+        @include flex(baseline, start);
+        gap: 1rem;
+        label {
+           width: 100px;
+        }
+        input {
+            width: 50%;
+        }
+    }
+    &_container {
+        margin-right: 4rem;
+    }
+    &_content {
+        @include flex(baseline, start, column);
+        gap: 1rem;
+    }
+}

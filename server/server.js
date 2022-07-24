@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+// import route
 const authRoute = require("./src/routes/authRoute");
 const userRoute = require("./src/routes/userRoute");
 const tvRoute = require("./src/routes/tvRoute");
@@ -18,9 +19,9 @@ app.use(express.json());
 // Route
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
+app.use("/list", listRoute);
 app.use("/tv", tvRoute);
 app.use("/movie", movieRoute);
-app.use("/list", listRoute);
 
 
 mongoose.connect(process.env.DB_URL, () => {

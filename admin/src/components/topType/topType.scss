@@ -1,0 +1,20 @@
+@import "../../scss/index";
+
+.topType {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  padding: 2rem;
+  gap: 2rem;
+  &_item {
+    box-shadow: 0 0px 20px -10px #000;
+    border-radius: 14px;
+    overflow: hidden;
+    width: 50%;
+    height: 100%;
+  }
+  &_content {
+    margin-top: 1rem;
+    @include flex(baseline, space-around);
+    gap: 1rem;
+  }
+}

@@ -2,25 +2,24 @@ const useController = require("../controllers/userController");
 const middleWareController = require("../controllers/middleWareController");
 
 const router = require("express").Router();
-router.get("/stats",middleWareController.verifyTokenAdmin, useController.getUserStats)
 
-router.get("/", middleWareController.verifyToken, useController.getAllUsers);
+// comment
 
-router.get("/:id", middleWareController.verifyToken, useController.getUser);
+router.post("/comment", useController.CreateCommentsMovie);
 
-router.post("/comment/:id", middleWareController.verifyToken, useController.comment);
+router.get("/comment", useController.GetAcomment);
 
-router.put(
-  "/update/:id",
-  middleWareController.verifyToken,
-  useController.updateUser
-);
+router.delete("/comment/:id", useController.DeleteComment);
 
-router.delete(
-  "/delete/:id",
-  middleWareController.verifyTokenAdmin,
-  useController.deleteUsers
-);
+// user
+router.get("/stats", useController.getUserStats);
 
+router.get("/", useController.getAllUsers);
+
+router.get("/:id", useController.getUser);
+
+router.put("/:id", useController.updateUser);
+
+router.delete("/:id", useController.deleteUsers);
 
 module.exports = router;

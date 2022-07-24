@@ -50,6 +50,7 @@ const TvSchema = new mongoose.Schema(
     ],
     vote_average: { type: Number },
     status: { type: String },
+    trailer: {type: String}
   },
   { timestamps: true }
 );
@@ -76,8 +77,7 @@ const EpisodesSchema = new mongoose.Schema({
     ref: "Tv",
   },
   idTv: {
-    type: Number,
-    required: true,
+    type: String,
   },
   season: {
     type: Number,
@@ -99,7 +99,30 @@ const EpisodesSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  video: {
+    type: String,
+  },
+ 
 });
+
+const userCommentTvSchema = new mongoose.Schema(
+  {
+    tv: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tv",
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    comment: {
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
+let UserCommentTv = mongoose.model("UserCommentTv", userCommentTvSchema);
 
 let Seasons = mongoose.model("Seasons", SeasonsSchema);
 
@@ -107,4 +130,4 @@ let Tv = mongoose.model("Tv", TvSchema);
 
 let Episodes = mongoose.model("Episodes", EpisodesSchema);
 
-module.exports = { Seasons, Tv, Episodes };
+module.exports = { Seasons, Tv, Episodes, UserCommentTv };

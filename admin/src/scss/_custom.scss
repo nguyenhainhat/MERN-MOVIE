@@ -1,0 +1,31 @@
+@use "./variables" as *;
+@use "./mixin" as *;
+
+// space
+$space-count: 100;
+
+$space-item: (
+  mt: margin-top,
+  mr: margin-right,
+  ml: margin-left,
+  mb: margin-bottom,
+  pt: padding-top,
+  pr: padding-right,
+  pl: padding-left,
+  pb: padding-bottom,
+);
+
+@each $space-keys in map-keys($space-item) {
+  $space-values: map-get(
+    $map: $space-item,
+    $key: $space-keys,
+  );
+  @for $i from 1 to $space-count {
+    $value: ($i * 2);
+    .#{$space-keys}-#{$value} {
+      @include space($space-values, $value);
+    }
+  }
+}
+
+// grid column

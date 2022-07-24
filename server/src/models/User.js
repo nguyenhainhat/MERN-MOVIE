@@ -20,9 +20,12 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
-    comment: {
-        type: String,
-    },
+    comment: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Comment",
+        },
+      ],
     admin: {
         type: Boolean,
         default: false
@@ -31,4 +34,28 @@ const userSchema = new mongoose.Schema({
     {timestamps: true}
 );
 
-module.exports = mongoose.model("User", userSchema)
+const userCommentMovieSchema = new mongoose.Schema({
+    movie: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Movie",
+    },
+    tv: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tv",
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
+    comment: {
+        type: String
+    }
+
+},
+    {timestamps: true}
+)
+
+const User = mongoose.model("User", userSchema)
+const UserCommentMovie = mongoose.model("UserCommentMovie", userCommentMovieSchema)
+
+module.exports = {User, UserCommentMovie}

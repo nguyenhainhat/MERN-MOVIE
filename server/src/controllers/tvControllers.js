@@ -17,18 +17,32 @@ const TvController = {
         cast: req.body.cast,
         vote_average: req.body.vote_average,
         status: req.body.status,
+        trailer: req.body.trailer,
       });
       const tv = await newTv.save();
-      console.log(tv.seasons, typeof tv.seasons);
       res.status(200).json(tv);
     } catch (error) {
       res.status(403).json(error);
     }
   },
   getAllTv: async (req, res) => {
+    const tvQuery = req.query.sort;
     try {
-      const getAllTv = await Tv.find();
-      return res.status(200).json(getAllTv);
+      if (tvQuery) {
+        const tvQueryAggregate = await Tv.aggregate([
+          { $sample: { size: 10 } },
+          {
+            $match: {
+              status: "visible",
+            },
+          },
+          { $sort: { vote_average: -1 } },
+        ]);
+        return res.status(200).json(tvQueryAggregate);
+      } else {
+        const getAllTv = await Tv.find();
+        return res.status(200).json(getAllTv);
+      }
     } catch (error) {
       console.log(error);
       res.status(403).json(error);
@@ -39,10 +53,57 @@ const TvController = {
       const tv = await Tv.findById(req.params.id).populate(
         "genre_ids cast seasons episodes"
       );
-      res.status(200).json(tv);
+      return res.status(200).json(tv);
     } catch (error) {
       console.log(error);
       res.status(403).json(error);
+    }
+  },
+  getTypeTv: async (req, res) => {
+    const typeTv = req.params.type;
+    try {
+      switch (typeTv) {
+        case "trending":
+          const trendingQueryAggregate = await Tv.aggregate([
+            {
+              $match: {
+                popularity: { $gt: 100 },
+                vote_average: { $lt: 8.9 },
+                status: "visible",
+              },
+            },
+            { $sort: { vote_average: -1 } },
+          ]);
+          return res.status(200).json(trendingQueryAggregate);
+        case "vote":
+          const voteQueryAggregate = await Tv.aggregate([
+            {
+              $match: {
+                vote_average: { $gte: 8.9 },
+                status: "visible",
+              },
+            },
+            { $sort: { vote_average: -1 } },
+          ]);
+          return res.status(200).json(voteQueryAggregate);
+        default:
+          return res.status(403).json("Check again type movie");
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(403).json(error);
+    }
+  },
+  getSimilarTv: async (req, res) => {
+    const idGenreTv = req.params.id;
+    try {
+      const similarTv = await Tv.find({
+        genre_ids: { _id: idGenreTv, status: "visible" },
+      });
+      return res.status(200).json(similarTv);
+    } catch (error) {
+      console.log(error);
+      return res.status(403).json(error);
     }
   },
   updateTv: async (req, res) => {
@@ -95,7 +156,7 @@ const SeasonsController = {
   },
   getAllSeasons: async (req, res) => {
     try {
-      const getAllSeasons = await Seasons.find({});
+      const getAllSeasons = await Seasons.find();
       return res.status(200).json(getAllSeasons);
     } catch (error) {
       console.log(error);
@@ -118,6 +179,10 @@ const SeasonsController = {
         { $set: req.body },
         { new: true }
       );
+      // if (req.body.tv) {
+      //   const tv = await Tv.findById(req.body.tv);
+      //   await tv.updateOne({ $push: { episodes: updateSeason._id } });
+      // }
       res.status(200).json(updateSeason);
     } catch (error) {
       console.log(error);
@@ -151,10 +216,10 @@ const EpisodesController = {
         name: req.body.name,
         overview: req.body.overview,
         image: req.body.image,
+        video: req.body.video,
       });
       const savedEpisodes = await newEpisodes.save();
       if (req.body.tv) {
-        console.log("a");
         const tv = await Tv.findById(req.body.tv);
         await tv.updateOne({ $push: { episodes: savedEpisodes._id } });
       }
@@ -164,33 +229,33 @@ const EpisodesController = {
     }
   },
   getAllEpisodes: async (req, res) => {
-    const idQuery = req.query.id;
+    try {
+      const episode = await Episodes.find();
+      res.status(200).json(episode);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  },
+  getAEpisode: async (req, res) => {
     const seasonQuery = req.query.s;
     const episodeQuery = req.query.e;
-    // "idTv": Number(idQuery),
-    // "season": Number(seasonQuery),
-    // "episode_number": Number(episodeQuery)
-
     try {
-      if (idQuery) {
-        if (seasonQuery) {
+      if (req.params.id) {
+        if (seasonQuery && !episodeQuery) {
           const IdSeasonAggregate = await Episodes.aggregate([
-            { $sample: { size: 10 } },
             {
               $match: {
-                idTv: Number(idQuery),
                 season: Number(seasonQuery),
               },
             },
           ]);
           return res.status(200).json(IdSeasonAggregate);
         }
-        if (seasonQuery && episodeQuery) {
+        if (seasonQuery ?? episodeQuery) {
           const EpisodeSeasonIdAggregate = await Episodes.aggregate([
-            { $sample: { size: 10 } },
             {
               $match: {
-                idTv: Number(idQuery),
                 season: Number(seasonQuery),
                 episode_number: Number(episodeQuery),
               },
@@ -198,15 +263,8 @@ const EpisodesController = {
           ]);
           return res.status(200).json(EpisodeSeasonIdAggregate);
         }
-        const episodesIdAggregate = await Episodes.aggregate([
-          { $sample: { size: 10 } },
-          {
-            $match: {
-              idTv: Number(idQuery),
-            },
-          },
-        ]);
-        console.log(seasonQuery, episodeQuery);
+        //
+        const episodesIdAggregate = await Episodes.findById(req.params.id);
         return res.status(200).json(episodesIdAggregate);
       } else {
         const getAllEpisodes = await Episodes.find();
@@ -224,6 +282,10 @@ const EpisodesController = {
         { $set: req.body },
         { new: true }
       );
+      // if (req.body.tv) {
+      //   const tv = await Tv.findById(req.body.tv);
+      //   await tv.updateOne({ $push: { episodes: updateEpisodes._id } });
+      // }
       res.status(200).json(updateEpisodes);
     } catch (error) {
       console.log(error);
