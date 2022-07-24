@@ -1,0 +1,65 @@
+@use "../../scss/" as *;
+
+.form {
+    &_container {
+        @include flex(center, center, row);
+
+    }
+    &_item {
+        @include flex(center, center, column);
+        gap: 1rem;
+    }
+    &-btn {
+        @include btn;
+        &_social {
+            @include flex(center, center, row);
+            gap: 1.2rem;
+            & > button {
+                padding: 0.8rem 2rem;
+                font-size: 1.5rem;
+                border-radius: 10px;
+                border: transparent;
+                &:last-child {
+                    color: $white;
+                    background-color: #3b5999;
+                }
+            }
+        }
+    }
+    &-input {
+        width: 60%;
+        padding: 0.5rem 1rem;
+        box-shadow: unset;
+        border-radius: 6px;
+        border: 1px solid $white;
+        &:disabled {
+            color: $black;
+            font-weight: 600;
+        }
+    }
+    &_checkbox {
+        @include flex(center, center, row);
+        gap: 0.5rem;
+    }
+}
+
+.state_auth {
+    display: inline-block;
+    background-color: $white;
+    border-radius: 1rem;
+    overflow: hidden;
+    .active {
+        background-color: $main-color;
+        color: $white;
+    }
+    &-btn {
+        @include btn;
+        color: $black;
+        border: unset;
+        border-radius: unset;
+        &:hover {
+            color: $white;
+            background-color: $main-color;
+        }
+    }
+}

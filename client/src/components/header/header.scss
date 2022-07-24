@@ -1,0 +1,208 @@
+@use "../../scss/" as *;
+@use "../../scss/custom" as *;
+.header {
+  box-shadow: 0 21px 25px -32px $white;
+  background-color: $black;
+
+  .active {
+    color: $main-color;
+  }
+
+  &_container {
+    position: relative;
+    @include flex(center, space-between, row);
+    height: 100px;
+
+    @include minWidth($x-lg) {
+      justify-content: space-around;
+    }
+  }
+
+  &_logo {
+    text-align: center;
+    img {
+      width: 77%;
+    }
+  }
+
+  &_menu {
+    @include maxWidth(767px) {
+      order: 2;
+    }
+    &-btn {
+      height: 28px;
+      width: 60px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      background: none;
+      border: 0;
+      text-align: center;
+      outline: none;
+      color: transparent;
+      margin-inline: auto;
+
+      div {
+        content: "";
+
+        position: absolute;
+        width: 50px;
+        height: 4px;
+        background-color: $white;
+        border-radius: 4px;
+        opacity: 1;
+        visibility: unset;
+        transition: all 0.3s ease;
+      }
+      &::after,
+      &::before {
+        content: "";
+        position: absolute;
+        width: 50px;
+        height: 4px;
+        background-color: $white;
+        transition: all 0.3s ease;
+        border-radius: 4px;
+        transform: unset;
+      }
+      &::after {
+        bottom: 0;
+      }
+      &::before {
+        top: 0;
+      }
+      @include minWidth($md) {
+        display: none;
+      }
+    }
+  }
+
+  &_nav {
+    display: block;
+    position: absolute;
+    transform: translate(-50%, 0%) scale(0);
+    @include fontSize(1.2rem, 2vw, 2rem);
+    @include hideVisible(0, visible);
+    @include minWidth($md) {
+      position: unset;
+      transform: translateY(0);
+      display: flex;
+      justify-content: space-around;
+      @include hideVisible(1, unset);
+    }
+  }
+
+  &_info {
+    position: relative;
+    z-index: 99;
+    @include flex(center, space-around);
+    @include minWidth($md) {
+      justify-content: space-evenly;
+    }
+
+    &_user {
+      padding: 1rem;
+      cursor: pointer;
+    }
+
+    &_user:hover &_dropdown {
+      opacity: 1;
+      visibility: visible;
+      transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+
+    &_user:hover &_login {
+      color: #ff1100;
+
+      transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+
+    &_dropdown {
+      position: absolute;
+      background-color: $black;
+      top: 4.5rem;
+      right: 6rem;
+      width: 130px;
+      height: 70px;
+      padding: 0.8rem;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+      p {
+        font-size: 1rem;
+        font-weight: 500;
+        &:hover {
+          color: #ff1100;
+        }
+        &:first-child {
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+  }
+
+  &_notify {
+    cursor: pointer;
+    position: relative;
+    &_info {
+      position: absolute;
+      top: -15px;
+      left: 12px;
+      @include fontSize(0.2rem, 2vw, 1.5rem);
+      background-color: #ff1100;
+      border-radius: 6px;
+      padding: 2px;
+    }
+  }
+
+  &_bell {
+    @include fontSize(1.5rem, 3vw, 3rem);
+  }
+
+  &-btn {
+    @include btn;
+    @include maxWidth($md) {
+      margin-inline: min(0.5rem, 1.5rem);
+    }
+    &:hover {
+      background-color: $white;
+      color: $black;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+  }
+
+  // @include maxWidth($md) {
+  .menu_open {
+    &::before {
+      transform: rotate(45deg) translate(20%, 0);
+      transition: all 0.3s ease;
+    }
+    &::after {
+      transform: rotate(-45deg) translate(30%, -8px);
+      transition: all 0.3s ease;
+    }
+    div {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+  }
+  .nav_open {
+    width: 230px;
+    text-align: center;
+    background-color: $black;
+    transform: translate(-4%, 22%) scale(1);
+    opacity: 1;
+    transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+    z-index: 99;
+    & > * {
+      color: $white;
+      @extend .pt-10, .pb-10;
+    }
+  }
+
+  // }
+}

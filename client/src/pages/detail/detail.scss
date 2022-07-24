@@ -1,0 +1,175 @@
+@use "../../scss/" as *;
+
+.banner {
+  height: 90vh;
+  position: relative;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    @include overlay();
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-image: linear-gradient(to top, $body-bg, rgba($black, 0));
+  }
+}
+
+.movie-content {
+  @include flex(center, flex-start);
+  margin-top: -78vh;
+  position: relative;
+  padding: 0 2rem;
+  gap: 30px;
+  margin-bottom: 2rem;
+  @include minWidth(768px) {
+    margin-top: -68vh;
+  }
+
+  &_poster {
+    flex: 1;
+
+    &_img {
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      border-radius: $border-radius;
+      padding-top: 135%;
+    }
+  }
+
+  &_info {
+    width: 100%;
+    padding-left: 2rem;
+    position: relative;
+
+    @include minWidth(768px) {
+      width: 70%;
+      padding-left: 0;
+    }
+
+    & > * {
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      font-size: 4rem;
+      line-height: 1;
+    }
+
+    .genres {
+      & > * ~ * {
+        margin-left: 0.5rem;
+      }
+
+      &_item {
+        padding: 0.5rem 1.5rem;
+        border: 2px solid $white;
+        border-radius: $border-radius;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background-color: $body-bg;
+      }
+    }
+  }
+}
+
+.casts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 10px;
+
+  &_item {
+    &_img {
+      background-position: center;
+      padding-top: 160px;
+      background-size: cover;
+      margin-bottom: 0.5rem;
+      border-radius: $border-radius-sm;
+    }
+
+    &_name {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.video {
+  position: relative;
+  display: flex;
+  margin-top: 1rem;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 3rem;
+  margin-top: auto;
+  width: 100%;
+  &_title {
+    margin-bottom: 1.5rem;
+  }
+  video {
+    box-shadow:  0 0 16px -2px rgba($color: $white, $alpha: 0.5);
+    border-radius: 20px;
+  }
+}
+
+.season {
+  // position: relative;
+  // display: flex;
+  &-item {
+    width: 100%;
+    text-align: center;
+    img {
+      width: 90%;
+      height: 20vw;
+      max-height: 270px;
+      border-radius: $border-radius-sm;
+    }
+  }
+  &-episodes {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    &_item {
+      max-width: 236px;
+      img {
+        border-radius: $border-radius-sm;
+      }
+    }
+    & .swiper-slide {
+      width: auto;
+    }
+  }
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  top: 35%;
+  &::after {
+    color: rgba($color: $white, $alpha: 1);
+  }
+  &:hover {
+    &::after {
+      color: rgba($color: $white, $alpha: 0.8);
+    }
+  }
+}
+.swiper-pagination-bullet,
+.swiper-pagination-bullet-active {
+  background-color: $white;
+}
+.swiper-slide {
+  width: 20%;
+}

@@ -1,0 +1,47 @@
+@use "../../scss/" as *;
+
+.movie-card {
+    position: relative;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 166%;
+    border-radius: 30px;
+    margin-bottom: 1rem;
+    width: 276px;
+    height: 430px;
+    
+    
+    h3 {
+        margin-top: 10px;
+        @include fontSize(1.8rem, 1vw, 2.2rem);
+    }
+
+    .btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: $black;
+        opacity: 0;
+        border-radius: $border-radius;
+        transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover::before{
+            opacity: .8;
+        }
+        &:hover .btn {
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+
+}

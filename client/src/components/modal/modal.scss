@@ -1,0 +1,50 @@
+@use "../../scss/" as *;
+
+.modal {
+  //   @include flex(center, center);
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  overflow: auto;
+  background-color: rgba($color: $black, $alpha: 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  &.active {
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  &_content {
+    text-align: center;
+    padding: 2rem;
+    background-color: $body-bg;
+    width: 75vw;
+    opacity: 0;
+    margin: auto;
+    transform: translate(-50%, 50%) scale(0.3);
+    position: relative;
+    border-radius: 0.5rem;
+    box-shadow: rgba($color: $white, $alpha: 0.5) 0 2px 5px -1px;
+    transition: all 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+   @include minWidth(1023px) {
+      width: 55vw;
+   }
+    &_close {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      font-size: 1.5rem;
+      cursor: pointer;
+
+      &:hover {
+        color: $main-color;
+      }
+    }
+  }
+  &.active &_content {
+    opacity: 1;
+    transform: translate(0, 10vw) scale(1);
+    transition: all 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+}

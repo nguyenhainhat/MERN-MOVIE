@@ -1,0 +1,113 @@
+@use "../../scss/" as *;
+
+.hero-slide {
+  margin-bottom: 3rem;
+
+  &_item {
+    padding-top: 3rem;
+    @include size(100%, 400px);
+    position: relative;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      @include size(100%, 100%);
+      @include overlay();
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      @include size(100%, 100%);
+      background-image: linear-gradient(to top, $body-bg, rgba($black, 0));
+    }
+
+    &.active > &_content > &_content_poster {
+      img {
+        transform: scale(1);
+        transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+      }
+    }
+
+    &.active > &_content > &_content_info {
+      .btns,
+      .title,
+      .overview {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 1.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+      }
+      .title {
+        transition-delay: 0.4s;
+      }
+      .overview {
+        transition-delay: 0.8s;
+      }
+      .btns {
+        transition-delay: 1s;
+      }
+    }
+  }
+
+  &_item_content {
+    @include flex(center, center);
+
+    &_info {
+      position: relative;
+      width: 100%;
+      padding: 0 3rem;
+      z-index: 99;
+
+      @include minWidth(767px) {
+        @include size(60%);
+      }
+      & > * {
+        margin-top: 3rem;
+      }
+      .title {
+        font-size: clamp(3.5rem, 2vw, 5.5rem);
+        font-weight: 700;
+        line-height: 1;
+      }
+      .overview {
+        font-weight: 500;
+      }
+      // .btns > * {
+      //   margin-left: 1rem;
+      // }
+
+      .btns,
+      .title,
+      .overview {
+        opacity: 0;
+        transform: translateY(-100px);
+        transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1),
+          opacity 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+      }
+    }
+
+    &_poster {
+      img {
+        @include size(400px);
+        border-radius: $border-radius;
+        box-shadow: $box-shadow;
+
+        transform: scale(0);
+        transition: all 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+      }
+      display: none;
+      text-align: center;
+      @include minWidth(767px) {
+        display: block;
+        width: 50%;
+      }
+    }
+  }
+}

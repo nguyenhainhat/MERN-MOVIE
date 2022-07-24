@@ -1,0 +1,20 @@
+@use "../../scss/" as *;
+
+.movie-list {
+  .swiper-slide {
+    width: calc(100% / 2 - 15px);
+    height: 87vw;
+    max-height: 586px;
+    @include minWidth(1023px) {
+      width: calc(100% / 4 - 15px);
+    }
+    @include minWidth(767px) {
+      width: calc(100% / 3 - 15px);
+      height: 60vw;
+    }
+  }
+  .swiper-pagination-bullet,
+  .swiper-pagination-bullet-active {
+    background-color: $white;
+  }
+}
